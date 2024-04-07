@@ -1,33 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const taskForm = document.getElementById('taskForm');
-    const taskInput = document.getElementById('taskInput');
-    const taskList = document.getElementById('taskList');
     const loginForm = document.getElementById('loginForm');
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
     const authMessage = document.getElementById('authMessage');
-    const userRole = document.getElementById('userRole');
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
 
-    // Fetch tasks from the server and render them
     async function fetchTasks() {
         const response = await fetch('/tasks');
         const tasks = await response.json();
+        taskList.innerHTML = ''; // Clear existing tasks
         tasks.forEach(task => renderTask(task));
-    }
-
-    // Add a new task
-    async function addTask(title) {
-        const response = await fetch('/tasks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ title })
-        });
-        if (response.ok) {
-            const newTask = await response.text();
-            renderTask({ id: Date.now(), title, completed: 0 });
-        }
     }
 
     async function login(username, password) {
@@ -41,12 +25,43 @@ document.addEventListener('DOMContentLoaded', () => {
         if (response.ok) {
             const data = await response.json();
             authMessage.textContent = data.message;
-            userRole.textContent = `Role: ${data.user.role}`;
-            fetchTasks(); // Fetch tasks after successful login
+            fetchTasks();
         } else {
             authMessage.textContent = 'Authentication failed';
         }
     }
+
+    async function addTask(title) {
+        const response = await fetch('/tasks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title })
+        });
+        if (response.ok) {
+            await fetchTasks(); // Fetch tasks after adding a new task
+        }
+    }
+
+    async function deleteTask(taskId) {
+        try {
+            const response = await fetch(`/tasks/${taskId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                await fetchTasks(); // Fetch tasks after deleting a task
+            } else {
+                console.error('Error deleting task:', response.status);
+            }
+        } catch (error) {
+            console.error('Error deleting task:', error);
+        }
+    }
+    
 
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -59,33 +74,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Render a task item
-    function renderTask(task) {
-        const li = document.createElement('li');
-        li.textContent = task.title;
-        if (!task.completed) {
-            const completeLink = document.createElement('a');
-            completeLink.href = '#';
-            completeLink.textContent = 'Mark as Complete';
-            completeLink.addEventListener('click', () => completeTask(task.id));
-            li.appendChild(completeLink);
-        }
-        taskList.appendChild(li);
-    }
-
-    // Mark a task as completed
-    async function completeTask(taskId) {
-        // Implement the logic to update task status
-    }
-
-    taskForm.addEventListener('submit', event => {
+    taskForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const title = taskInput.value.trim();
         if (title) {
-            addTask(title);
+            await addTask(title);
             taskInput.value = '';
         }
     });
+
+    /*function renderTask(task) {
+        const li = document.createElement('li');
+        li.textContent = task.title;
+        taskList.appendChild(li);
+    }*/
+
+
+// Event listener to delete a task when clicked
+taskList.addEventListener('click', async (event) => {
+    if (event.target.tagName === 'LI') {
+        const taskId = event.target.dataset.taskId;
+        await deleteTask(taskId);
+    }
+});
+
+// Render tasks function (updated to include task ID)
+function renderTask(task) {
+    const li = document.createElement('li');
+    li.textContent = task.title;
+    li.dataset.taskId = task.id; // Store task ID as a data attribute
+    taskList.appendChild(li);
+}
 
     fetchTasks();
 });
