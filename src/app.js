@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (response.ok) {
             await fetchTasks(); // Fetch tasks after adding a new task
+        } else {
+            console.error('Error adding task:', response.status);
         }
     }
 
@@ -61,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error deleting task:', error);
         }
     }
-    
 
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -83,28 +84,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /*function renderTask(task) {
+    taskList.addEventListener('click', async (event) => {
+        if (event.target.tagName === 'LI') {
+            const taskId = event.target.dataset.taskId;
+            await deleteTask(taskId);
+        }
+    });
+
+    function renderTask(task) {
         const li = document.createElement('li');
         li.textContent = task.title;
+        li.dataset.taskId = task.id; // Store task ID as a data attribute
         taskList.appendChild(li);
-    }*/
-
-
-// Event listener to delete a task when clicked
-taskList.addEventListener('click', async (event) => {
-    if (event.target.tagName === 'LI') {
-        const taskId = event.target.dataset.taskId;
-        await deleteTask(taskId);
     }
-});
-
-// Render tasks function (updated to include task ID)
-function renderTask(task) {
-    const li = document.createElement('li');
-    li.textContent = task.title;
-    li.dataset.taskId = task.id; // Store task ID as a data attribute
-    taskList.appendChild(li);
-}
 
     fetchTasks();
 });
