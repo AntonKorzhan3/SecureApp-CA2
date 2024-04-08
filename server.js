@@ -23,6 +23,16 @@ app.post('/login', (req, res) => {
     });
 });
 
+app.get('/users', (req, res) => {
+    db.all('SELECT * FROM users', (err, users) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+        res.json(users);
+    });
+});
+
 
 // Route accessible only to authenticated users (insecure, for demonstration purposes only)
 app.get('/tasks', (req, res) => {

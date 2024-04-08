@@ -91,6 +91,37 @@ taskList.addEventListener('click', async (event) => {
     }
 });
 
+const displayUsersButton = document.getElementById('displayUsersButton');
+const usersList = document.getElementById('usersList');
+
+async function fetchUsers() {
+    const response = await fetch('/users');
+        const users = await response.json();
+        usersList.innerHTML = ''; // Clear existing tasks
+        users.forEach(user => renderUser(user));
+    }
+    function renderUser(user) {
+        const li = document.createElement('li');
+        li.textContent = user.username; // Render task title without sanitization
+        li.dataset.userId = user.id; // Store task ID as a data attribute
+        usersList.appendChild(li);
+    }
+
+    displayUsersButton.addEventListener('click', async (event) => {
+        try {
+            const response = await fetch('/users');
+            const users = await response.json();
+            usersList.innerHTML = ''; // Clear existing list
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = JSON.stringify(user); // Display all user information as JSON string
+                usersList.appendChild(li);
+            });
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    });
+
 // Render tasks function (updated to include task ID)
 function renderTask(task) {
     const li = document.createElement('li');
@@ -99,6 +130,6 @@ function renderTask(task) {
     taskList.appendChild(li);
 }
 
-
+    fetchUsers();
     fetchTasks();
 });
