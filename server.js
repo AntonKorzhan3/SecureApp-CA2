@@ -14,13 +14,15 @@ app.use(bodyParser.json());
 // Authentication route (insecure, for demonstration purposes only)
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    db.get(`SELECT * FROM users WHERE username='${username}' AND password='${password}'`, (err, user) => {
+    const query = `SELECT * FROM users WHERE username='${username}' AND password='${password}'`;
+    db.get(query, (err, user) => {
         if (err || !user) {
             return res.status(401).send('Invalid username or password');
         }
         res.json({ message: 'Login successful', user });
     });
 });
+
 
 // Route accessible only to authenticated users (insecure, for demonstration purposes only)
 app.get('/tasks', (req, res) => {

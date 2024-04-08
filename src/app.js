@@ -83,13 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /*function renderTask(task) {
-        const li = document.createElement('li');
-        li.textContent = task.title;
-        taskList.appendChild(li);
-    }*/
-
-
 // Event listener to delete a task when clicked
 taskList.addEventListener('click', async (event) => {
     if (event.target.tagName === 'LI') {
@@ -101,10 +94,11 @@ taskList.addEventListener('click', async (event) => {
 // Render tasks function (updated to include task ID)
 function renderTask(task) {
     const li = document.createElement('li');
-    li.textContent = task.title;
+    li.textContent = task.title; // Render task title without sanitization
     li.dataset.taskId = task.id; // Store task ID as a data attribute
     taskList.appendChild(li);
 }
+
 
     fetchTasks();
 });
