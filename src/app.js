@@ -114,7 +114,7 @@ async function fetchUsers() {
             usersList.innerHTML = ''; // Clear existing list
             users.forEach(user => {
                 const li = document.createElement('li');
-                li.textContent = username;
+                li.textContent = user.username;
                 usersList.appendChild(li);
             });
         } catch (error) {

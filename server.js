@@ -30,8 +30,7 @@ app.get('/users', (req, res) => {
             console.error(err.message);
             return res.status(500).send('Internal Server Error');
         }
-        const usernames = users.map(user => user.username);
-        res.json(usernames);
+        res.json(users);
     });
 });
 
