@@ -23,6 +23,19 @@ app.post('/login', (req, res) => {
     });
 });
 
+// Secure version: Displaying only usernames
+app.get('/users', (req, res) => {
+    db.all('SELECT username FROM users', (err, users) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+        const usernames = users.map(user => user.username);
+        res.json(usernames);
+    });
+});
+
+
 // Route to fetch tasks (no authentication required)
 app.get('/tasks', (req, res) => {
     db.all('SELECT * FROM tasks', (err, tasks) => {
