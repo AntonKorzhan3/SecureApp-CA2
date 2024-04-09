@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchTasks() {
         const response = await fetch('/tasks');
         const tasks = await response.json();
-        taskList.innerHTML = ''; // Clear existing tasks
+        taskList.innerHTML = ''; 
         tasks.forEach(task => renderTask(task));
     }
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ title })
         });
         if (response.ok) {
-            await fetchTasks(); // Fetch tasks after adding a new task
+            await fetchTasks(); 
         } else {
             console.error('Error adding task:', response.status);
         }
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             if (response.ok) {
-                await fetchTasks(); // Fetch tasks after deleting a task
+                await fetchTasks(); 
             } else {
                 console.error('Error deleting task:', response.status);
             }
@@ -97,13 +97,13 @@ const usersList = document.getElementById('usersList');
 async function fetchUsers() {
     const response = await fetch('/users');
         const users = await response.json();
-        usersList.innerHTML = ''; // Clear existing tasks
+        usersList.innerHTML = ''; 
         users.forEach(user => renderUser(user));
     }
     function renderUser(user) {
         const li = document.createElement('li');
-        li.textContent = user.username; // Render task title without sanitization
-        li.dataset.userId = user.id; // Store task ID as a data attribute
+        li.textContent = user.username; 
+        li.dataset.userId = user.id; 
         usersList.appendChild(li);
     }
 
@@ -111,7 +111,7 @@ async function fetchUsers() {
         try {
             const response = await fetch('/users');
             const users = await response.json();
-            usersList.innerHTML = ''; // Clear existing list
+            usersList.innerHTML = ''; 
             users.forEach(user => {
                 const li = document.createElement('li');
                 li.textContent = user.username;
@@ -125,7 +125,7 @@ async function fetchUsers() {
     function renderTask(task) {
         const li = document.createElement('li');
         li.textContent = task.title;
-        li.dataset.taskId = task.id; // Store task ID as a data attribute
+        li.dataset.taskId = task.id; 
         taskList.appendChild(li);
     }
 
