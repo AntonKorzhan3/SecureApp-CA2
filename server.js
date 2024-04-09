@@ -11,7 +11,6 @@ app.use(express.static('src'));
 app.use(express.json());
 app.use(bodyParser.json());
 
-// Authentication route (insecure, for demonstration purposes only)
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const query = `SELECT * FROM users WHERE username='${username}' AND password='${password}'`;
@@ -33,8 +32,6 @@ app.get('/users', (req, res) => {
     });
 });
 
-
-// Route accessible only to authenticated users (insecure, for demonstration purposes only)
 app.get('/tasks', (req, res) => {
     db.all('SELECT * FROM tasks', (err, tasks) => {
         if (err) {
@@ -45,7 +42,6 @@ app.get('/tasks', (req, res) => {
     });
 });
 
-// Route to add a new task (insecure, for demonstration purposes only)
 app.post('/tasks', (req, res) => {
     const { title } = req.body;
     db.run(`INSERT INTO tasks (title) VALUES ('${title}')`, (err) => {
@@ -65,7 +61,6 @@ app.delete('/tasks/:taskId', (req, res) => {
         }
         const taskId = req.params.taskId;
         if (user.username === 'admin') {
-        // Assuming you have a 'tasks' table with a column named 'id' as the primary key
             db.run('DELETE FROM tasks WHERE id = ?', [taskId], (err) => {
                 if (err) {
                     console.error(err.message);
