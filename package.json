@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@wdio/cli": "^8.35.1",
     "express": "^4.19.2",
+    "selenium": "^2.20.0",
+    "selenium-webdriver": "^4.19.0",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "mocha": "10.2.0"
 }
